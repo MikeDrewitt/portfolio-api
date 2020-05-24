@@ -1,0 +1,53 @@
+{
+  "name": "portfolio-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rimraf dist/*",
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "tsc": "tsc",
+    "build": "npm-run-all clean lint tsc",
+    "dev:start": "npm-run-all build start",
+    "dev": "PORT=3001 nodemon --watch src -e ts,ejs --exec npm run dev:start",
+    "start": "node .",
+    "test": "jest --config jest.config.js --passWithNoTests"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/webhook": "^5.0.3",
+    "@types/cors": "^2.8.6",
+    "@types/helmet": "0.0.47",
+    "@types/morgan": "^1.9.0",
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.5.0",
+    "helmet": "^3.22.0",
+    "morgan": "^1.10.0",
+    "node-cron": "^2.0.3",
+    "pg": "^8.2.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.25"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/fs-extra": "^9.0.1",
+    "@types/node": "^14.0.5",
+    "@types/shelljs": "^0.8.8",
+    "eslint": "^6.8.0",
+    "faker": "^4.1.0",
+    "fs-extra": "^9.0.0",
+    "jest": "^25.3.0",
+    "nodemon": "^2.0.4",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "shelljs": "^0.8.4",
+    "ts-node": "^8.10.1",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.3"
+  }
+}
