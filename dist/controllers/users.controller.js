@@ -41,9 +41,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports._delete = exports.patch = exports.post = exports.detail = exports.get = void 0;
 var express_validator_1 = require("express-validator");
-var User_model_1 = __importDefault(require("../models/User.model"));
 var passport_1 = __importDefault(require("passport"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var User_model_1 = __importDefault(require("../models/User.model"));
+var environment_1 = __importDefault(require("../environment"));
 var api_errors_1 = require("../errors/api.errors");
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
@@ -178,25 +179,23 @@ function _delete(req, res, next) {
 exports._delete = _delete;
 function login(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
+        var buildJwt;
         var _this = this;
         return __generator(this, function (_a) {
-            passport_1.default.authenticate('login', function (err, user, info) { return __awaiter(_this, void 0, void 0, function () {
-                var error;
+            buildJwt = function (err, user) { return __awaiter(_this, void 0, void 0, function () {
                 var _this = this;
                 return __generator(this, function (_a) {
                     try {
-                        if (err || !user) {
-                            error = new Error('An error occurred.');
-                            return [2 /*return*/, next(error)];
-                        }
+                        if (!user)
+                            return [2 /*return*/, next(new Error("Unknown username or incorrect password"))];
                         req.login(user, { session: false }, function (error) { return __awaiter(_this, void 0, void 0, function () {
                             var body, token;
                             return __generator(this, function (_a) {
                                 if (error)
                                     return [2 /*return*/, next(error)];
-                                body = { id: user.id, username: user.username };
-                                token = jsonwebtoken_1.default.sign({ user: body }, 'TOP_SECRET');
-                                return [2 /*return*/, res.json({ token: token })];
+                                body = { id: user.id, username: user.username, role: user.role };
+                                token = jsonwebtoken_1.default.sign({ user: body }, environment_1.default.jwtSecreteKey);
+                                return [2 /*return*/, res.status(200).json({ token: token })];
                             });
                         }); });
                     }
@@ -205,7 +204,8 @@ function login(req, res, next) {
                     }
                     return [2 /*return*/];
                 });
-            }); })(req, res, next);
+            }); };
+            passport_1.default.authenticate('login', buildJwt)(req, res, next);
             return [2 /*return*/];
         });
     });

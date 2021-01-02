@@ -39,66 +39,70 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.systemAuth = exports.userAuth = void 0;
 var passport_1 = __importDefault(require("passport"));
 var passport_local_1 = require("passport-local");
 var passport_jwt_1 = require("passport-jwt");
 var User_model_1 = __importDefault(require("../models/User.model"));
-passport_1.default.use('signup', new passport_local_1.Strategy({
-    usernameField: 'username',
-    passwordField: 'password'
-}, function (username, password, done) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                user = new User_model_1.default(username);
-                return [4 /*yield*/, user.create(password)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/, done(null, user)];
-            case 2:
-                error_1 = _a.sent();
-                done(error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
+var environment_1 = __importDefault(require("../environment"));
+var secretOrKey = environment_1.default.jwtSecreteKey;
+var jwtFromRequest = passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken();
+function loginCallback(username, password, done) {
+    return __awaiter(this, void 0, void 0, function () {
+        var user, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, User_model_1.default.authenticate(username, password)];
+                case 1:
+                    user = _a.sent();
+                    if (!user)
+                        return [2 /*return*/, done(null, false, { message: 'Username or password was incorrect' })];
+                    return [2 /*return*/, done(null, user, { message: 'Logged in Successfully' })];
+                case 2:
+                    error_1 = _a.sent();
+                    return [2 /*return*/, done(error_1)];
+                case 3: return [2 /*return*/];
+            }
+        });
     });
-}); }));
-passport_1.default.use('login', new passport_local_1.Strategy({
-    usernameField: 'username',
-    passwordField: 'password'
-}, function (username, password, done) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, error_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, User_model_1.default.authenticate(username, password)];
-            case 1:
-                user = _a.sent();
-                if (!user)
-                    return [2 /*return*/, done(null, false, { message: 'Username or password was incorrect' })];
-                return [2 /*return*/, done(null, user, { message: 'Logged in Successfully' })];
-            case 2:
-                error_2 = _a.sent();
-                return [2 /*return*/, done(error_2)];
-            case 3: return [2 /*return*/];
-        }
+}
+function checkAuthentication(token, done) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            try {
+                return [2 /*return*/, done(null, token.user)];
+            }
+            catch (error) {
+                done(error);
+            }
+            return [2 /*return*/];
+        });
     });
-}); }));
-passport_1.default.use(new passport_jwt_1.Strategy({
-    secretOrKey: 'TOP_SECRET',
-    jwtFromRequest: passport_jwt_1.ExtractJwt.fromUrlQueryParameter('secret_token')
-}, function (token, done) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        try {
-            return [2 /*return*/, done(null, token.user)];
-        }
-        catch (error) {
-            done(error);
-        }
-        return [2 /*return*/];
+}
+function checkSystem(token, done) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            try {
+                if (token.user.role !== 'system')
+                    throw new Error('Non-system users are unauthorized');
+                return [2 /*return*/, done(null, token.user)];
+            }
+            catch (error) {
+                done(error);
+            }
+            return [2 /*return*/];
+        });
     });
-}); }));
+}
+var login = new passport_local_1.Strategy({ usernameField: 'username', passwordField: 'password' }, loginCallback);
+var jwt = new passport_jwt_1.Strategy({ secretOrKey: secretOrKey, jwtFromRequest: jwtFromRequest }, checkAuthentication);
+var system = new passport_jwt_1.Strategy({ secretOrKey: secretOrKey, jwtFromRequest: jwtFromRequest }, checkSystem);
+passport_1.default.use('login', login);
+passport_1.default.use('system', system);
+// Default check if user has auth
+passport_1.default.use(jwt);
+exports.userAuth = passport_1.default.authenticate('jwt', { session: false });
+exports.systemAuth = passport_1.default.authenticate('system', { session: false });
 //# sourceMappingURL=passport.middleware.js.map

@@ -1,6 +1,5 @@
 // Libraries
 import bcrypt from "bcrypt";
-import { authenticate } from "passport";
 import { Entity, Column, FindManyOptions, Unique, getManager } from "typeorm";
 
 import { Generic } from './_Generic.model';
@@ -14,10 +13,14 @@ export default class User extends Generic {
   @Column({ length: 60 })
   hash: string;
 
+  @Column({ length: 10, default: 'user' })
+  role: 'user' | 'admin' | 'system'
+
   constructor(username: string) {
     super();
 
     this.username = username;
+    this.role = 'user';
   }
 
   public async create(password: string) {
@@ -45,7 +48,7 @@ export default class User extends Generic {
   public static async authenticate(username: string, password: string) {
     const user = await getManager().getRepository(User).findOne({ username, deletedAt: null });
 
-    if (!user) return false;
+    if (!user) return null;
 
     const authenticated = await bcrypt.compare(password, user.hash);
 

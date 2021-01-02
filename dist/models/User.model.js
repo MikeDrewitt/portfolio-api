@@ -81,6 +81,7 @@ var User = /** @class */ (function (_super) {
     function User(username) {
         var _this = _super.call(this) || this;
         _this.username = username;
+        _this.role = 'user';
         return _this;
     }
     User_1 = User;
@@ -146,7 +147,7 @@ var User = /** @class */ (function (_super) {
                     case 1:
                         user = _a.sent();
                         if (!user)
-                            return [2 /*return*/, false];
+                            return [2 /*return*/, null];
                         return [4 /*yield*/, bcrypt_1.default.compare(password, user.hash)];
                     case 2:
                         authenticated = _a.sent();
@@ -164,6 +165,10 @@ var User = /** @class */ (function (_super) {
         typeorm_1.Column({ length: 60 }),
         __metadata("design:type", String)
     ], User.prototype, "hash", void 0);
+    __decorate([
+        typeorm_1.Column({ length: 10, default: 'user' }),
+        __metadata("design:type", String)
+    ], User.prototype, "role", void 0);
     User = User_1 = __decorate([
         typeorm_1.Entity(),
         typeorm_1.Unique(["username"]),

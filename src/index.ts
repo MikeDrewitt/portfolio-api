@@ -12,8 +12,9 @@ import { createConnection } from "typeorm";
 // Middleware
 import routes from "./routers/routes";
 import errorHandler from "./middleware/errorHandler.middleware";
+import './middleware/passport.middleware'; // Initializes passport middleware
 
-import './middleware/passport.middleware';
+import environment from "./environment";
 
 const app = express();
 
@@ -29,8 +30,6 @@ createConnection()
     app.use("/", routes);
     app.use(errorHandler);
 
-    const port = process.env.PORT || 3001;
-
-    app.listen(port, () => console.log(`API listenting at port - ${port}`));
+    app.listen(environment.port, () => console.log(`API listenting at port - ${environment.port}`));
   })
   .catch((err) => console.log("TypeORM connection error: ", err));

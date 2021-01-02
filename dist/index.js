@@ -13,7 +13,8 @@ var typeorm_1 = require("typeorm");
 // Middleware
 var routes_1 = __importDefault(require("./routers/routes"));
 var errorHandler_middleware_1 = __importDefault(require("./middleware/errorHandler.middleware"));
-require("./middleware/passport.middleware");
+require("./middleware/passport.middleware"); // Initializes passport middleware
+var environment_1 = __importDefault(require("./environment"));
 var app = express_1.default();
 typeorm_1.createConnection()
     .then(function (connection) {
@@ -25,8 +26,7 @@ typeorm_1.createConnection()
     // Middleware
     app.use("/", routes_1.default);
     app.use(errorHandler_middleware_1.default);
-    var port = process.env.PORT || 3001;
-    app.listen(port, function () { return console.log("API listenting at port - " + port); });
+    app.listen(environment_1.default.port, function () { return console.log("API listenting at port - " + environment_1.default.port); });
 })
     .catch(function (err) { return console.log("TypeORM connection error: ", err); });
 //# sourceMappingURL=index.js.map
