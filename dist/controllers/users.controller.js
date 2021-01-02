@@ -35,10 +35,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.post = exports.get = void 0;
+exports.login = exports._delete = exports.patch = exports.post = exports.detail = exports.get = void 0;
 var express_validator_1 = require("express-validator");
-var User_model_1 = require("../models/User.model");
+var User_model_1 = __importDefault(require("../models/User.model"));
+var passport_1 = __importDefault(require("passport"));
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var api_errors_1 = require("../errors/api.errors");
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var users, err_1;
@@ -46,7 +52,7 @@ function get(req, res, next) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, User_model_1.list()];
+                    return [4 /*yield*/, User_model_1.default.list()];
                 case 1:
                     users = _a.sent();
                     res.status(200).send(users);
@@ -61,21 +67,20 @@ function get(req, res, next) {
     });
 }
 exports.get = get;
-function post(req, res, next) {
+function detail(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var body, errors, user, err_2;
+        var id, user, err_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    body = req.body;
-                    errors = express_validator_1.validationResult(req);
-                    if (!errors.isEmpty())
-                        return [2 /*return*/, res.status(400).json({ errors: errors.array() })];
-                    return [4 /*yield*/, User_model_1.create(body)];
+                    id = req.params.id;
+                    return [4 /*yield*/, User_model_1.default.retrieve(id)];
                 case 1:
                     user = _a.sent();
-                    res.status(201).send(user);
+                    if (!user)
+                        return [2 /*return*/, res.status(404).json({ error: api_errors_1.NotFound })];
+                    res.status(200).send(user);
                     return [3 /*break*/, 3];
                 case 2:
                     err_2 = _a.sent();
@@ -86,5 +91,124 @@ function post(req, res, next) {
         });
     });
 }
+exports.detail = detail;
+function post(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var errors, _a, username, password, user, dbUser, err_3;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    errors = express_validator_1.validationResult(req);
+                    if (!errors.isEmpty())
+                        return [2 /*return*/, res.status(400).json({ errors: errors.array() })];
+                    _a = req.body, username = _a.username, password = _a.password;
+                    user = new User_model_1.default(username);
+                    return [4 /*yield*/, user.create(password)];
+                case 1:
+                    dbUser = _b.sent();
+                    res.status(201).send(dbUser);
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_3 = _b.sent();
+                    res.status(400).json({ message: err_3.detail });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
 exports.post = post;
+function patch(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var body, id, errors, user, err_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    body = req.body;
+                    id = req.params.id;
+                    errors = express_validator_1.validationResult(req);
+                    if (!errors.isEmpty())
+                        return [2 /*return*/, res.status(400).json({ errors: errors.array() })];
+                    return [4 /*yield*/, User_model_1.default.retrieve(id)];
+                case 1:
+                    user = _a.sent();
+                    if (!user)
+                        res.status(404).send();
+                    return [4 /*yield*/, user.update(body)];
+                case 2:
+                    _a.sent();
+                    res.status(200).send();
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_4 = _a.sent();
+                    next(err_4);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.patch = patch;
+function _delete(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var id, dbResponse, err_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    id = req.params.id;
+                    return [4 /*yield*/, User_model_1.default.delete(id)];
+                case 1:
+                    dbResponse = _a.sent();
+                    if (!dbResponse.affected)
+                        return [2 /*return*/, res.status(404).json({ error: api_errors_1.NotFound })];
+                    res.status(204).send();
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_5 = _a.sent();
+                    next(err_5);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports._delete = _delete;
+function login(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _this = this;
+        return __generator(this, function (_a) {
+            passport_1.default.authenticate('login', function (err, user, info) { return __awaiter(_this, void 0, void 0, function () {
+                var error;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    try {
+                        if (err || !user) {
+                            error = new Error('An error occurred.');
+                            return [2 /*return*/, next(error)];
+                        }
+                        req.login(user, { session: false }, function (error) { return __awaiter(_this, void 0, void 0, function () {
+                            var body, token;
+                            return __generator(this, function (_a) {
+                                if (error)
+                                    return [2 /*return*/, next(error)];
+                                body = { id: user.id, username: user.username };
+                                token = jsonwebtoken_1.default.sign({ user: body }, 'TOP_SECRET');
+                                return [2 /*return*/, res.json({ token: token })];
+                            });
+                        }); });
+                    }
+                    catch (error) {
+                        return [2 /*return*/, next(error)];
+                    }
+                    return [2 /*return*/];
+                });
+            }); })(req, res, next);
+            return [2 /*return*/];
+        });
+    });
+}
+exports.login = login;
 //# sourceMappingURL=users.controller.js.map

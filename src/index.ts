@@ -13,6 +13,8 @@ import { createConnection } from "typeorm";
 import routes from "./routers/routes";
 import errorHandler from "./middleware/errorHandler.middleware";
 
+import './middleware/passport.middleware';
+
 const app = express();
 
 createConnection()

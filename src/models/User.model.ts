@@ -1,33 +1,54 @@
 // Libraries
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  FindManyOptions,
-  getManager,
-} from "typeorm";
+import bcrypt from "bcrypt";
+import { authenticate } from "passport";
+import { Entity, Column, FindManyOptions, Unique, getManager } from "typeorm";
+
+import { Generic } from './_Generic.model';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+@Unique(["username"])
+export default class User extends Generic {
   @Column({ length: 32 })
   username: string;
 
-  @Column({ nullable: true })
-  location: string;
-}
+  @Column({ length: 60 })
+  hash: string;
 
-export function create(user: User) {
-  const newUser = new User();
+  constructor(username: string) {
+    super();
 
-  newUser.username = user.username;
-  newUser.location = user.location;
+    this.username = username;
+  }
 
-  return getManager().save(newUser);
-}
+  public async create(password: string) {
+    this.hash = await bcrypt.hash(password, 10);
 
-export function list(options?: FindManyOptions<User>) {
-  return getManager().getRepository(User).find(options);
+    return await getManager().save(this);
+  }
+
+  public async update(updates: object) {
+    return getManager().update(User, this.id, updates);
+  }
+
+  public static async delete(id: number) {
+    return await getManager().softDelete(User, { id });
+  }
+
+  public static async retrieve(id: number) {
+    return await getManager().getRepository(User).findOne({ id, deletedAt: null });
+  }
+
+  public static async list(options?: FindManyOptions<User>) {
+    return await getManager().getRepository(User).find({ ...options, deletedAt: null });
+  }
+
+  public static async authenticate(username: string, password: string) {
+    const user = await getManager().getRepository(User).findOne({ username, deletedAt: null });
+
+    if (!user) return false;
+
+    const authenticated = await bcrypt.compare(password, user.hash);
+
+    return authenticated ? user : null;
+  }
 }

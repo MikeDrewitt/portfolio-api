@@ -1,17 +1,10 @@
 // Libraries
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  FindManyOptions,
-  getManager,
-} from "typeorm";
+import { Entity, Column, FindManyOptions, getManager, } from 'typeorm';
+
+import { Generic } from './_Generic.model';
 
 @Entity()
-export class Adventure {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Adventure extends Generic {
   @Column({ length: 256 })
   name: string;
 
@@ -25,7 +18,7 @@ export class Adventure {
   addressLine1: string;
 }
 
-export function create(adventure: Adventure) {
+export async function create(adventure: Adventure) {
   const newAdventure = new Adventure();
 
   newAdventure.name = adventure.name;
@@ -35,6 +28,19 @@ export function create(adventure: Adventure) {
   return getManager().save(newAdventure);
 }
 
-export function list(options?: FindManyOptions<Adventure>) {
+export async function update(adventure: Adventure) {
+  return getManager().save(adventure);
+}
+
+export async function retrieve(id: number) {
+  return getManager().getRepository(Adventure).findOne({ id, deletedAt: null });
+}
+
+export async function deleteRecord(id: number) {
+  return getManager().softDelete(Adventure, { id });
+}
+
+export async function list(options?: FindManyOptions<Adventure>) {
   return getManager().getRepository(Adventure).find(options);
 }
+

@@ -13,6 +13,7 @@ var typeorm_1 = require("typeorm");
 // Middleware
 var routes_1 = __importDefault(require("./routers/routes"));
 var errorHandler_middleware_1 = __importDefault(require("./middleware/errorHandler.middleware"));
+require("./middleware/passport.middleware");
 var app = express_1.default();
 typeorm_1.createConnection()
     .then(function (connection) {
