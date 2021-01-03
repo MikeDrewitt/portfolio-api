@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.post = exports.get = void 0;
 var express_validator_1 = require("express-validator");
-var Adventure_model_1 = require("../models/Adventure.model");
+var adventure_model_1 = require("@models/adventure.model");
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var adventures, err_1;
@@ -46,7 +46,7 @@ function get(req, res, next) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, Adventure_model_1.list()];
+                    return [4 /*yield*/, adventure_model_1.list()];
                 case 1:
                     adventures = _a.sent();
                     res.status(200).send(adventures);
@@ -72,7 +72,7 @@ function post(req, res, next) {
                     errors = express_validator_1.validationResult(req);
                     if (!errors.isEmpty())
                         return [2 /*return*/, res.status(400).json({ errors: errors.array() })];
-                    return [4 /*yield*/, Adventure_model_1.create(body)];
+                    return [4 /*yield*/, adventure_model_1.create(body)];
                 case 1:
                     user = _a.sent();
                     res.status(201).send(user);

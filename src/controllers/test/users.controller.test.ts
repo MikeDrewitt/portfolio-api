@@ -2,10 +2,12 @@
 import { get, detail } from '../users.controller';
 
 // Mocked out user model
-import User from '../../models/User.model';
-jest.mock('../../models/User.model');
+import User from '../../models/user.model';
 
-import { NotFound } from "../../errors/api.errors";
+jest.mock('../../models/User.model');
+jest.mock('express-validator');
+
+import { NotFound } from "../../constants/errors/api.errors";
 
 describe('user controller', () => {
 
@@ -80,9 +82,13 @@ describe('user controller', () => {
     });
   });
 
-  // describe('POST', () => {
+  describe('POST', () => {
+    beforeEach(() => {
+      req = { body: { username: 'example', password: 'password1' } };
+    });
 
-  // });
+
+  });
 
   // describe('PATCH', () => {
 

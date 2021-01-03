@@ -2,14 +2,14 @@
 import express from "express";
 
 // Middleware
-import { create as createValidator, update as updateValidator } from "../validators/users.validator";
-import { userAuth } from "../middleware/passport.middleware";
+import { create as createValidator, update as updateValidator } from "@middleware/validators/users.validator";
+import { userAuth } from "@middleware/auth.middleware";
 
 // Controller
-import { get, detail, post, patch, _delete, login } from "../controllers/users.controller";
+import { get, detail, post, patch, _delete, login } from "@controllers/users.controller";
 
 // Serialization
-import { generic as genericSerializer } from '../serializers/user.serializer';
+import { generic as genericSerializer } from '@middleware/serializers/user.serializer';
 
 const Router = express.Router();
 

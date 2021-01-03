@@ -3,9 +3,10 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JWTstrategy, ExtractJwt } from 'passport-jwt';
 
-import User from '../models/User.model';
+import User from '@models/user.model';
 
-import environment from '../environment';
+import environment from '@~/environment';
+import UserRole from '@constants/types/userRole.type';
 
 const secretOrKey = environment.jwtSecreteKey;
 const jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
@@ -32,7 +33,7 @@ async function checkAuthentication(token: any, done: any) {
 
 async function checkSystem(token: any, done: any) {
   try {
-    if (token.user.role !== 'system') throw new Error('Non-system users are unauthorized');
+    if (token.user.role !== UserRole.system) throw new Error('Non-system users are unauthorized');
 
     return done(null, token.user);
   } catch (error) {

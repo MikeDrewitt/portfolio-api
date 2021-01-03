@@ -2,7 +2,9 @@
 import bcrypt from "bcrypt";
 import { Entity, Column, FindManyOptions, Unique, getManager } from "typeorm";
 
-import { Generic } from './_Generic.model';
+import { Generic } from '@models/_generic.model';
+
+import UserRole from '@constants/types/userRole.type';
 
 @Entity()
 @Unique(["username"])
@@ -13,14 +15,14 @@ export default class User extends Generic {
   @Column({ length: 60 })
   hash: string;
 
-  @Column({ length: 10, default: 'user' })
-  role: 'user' | 'admin' | 'system'
+  @Column({ default: UserRole.user })
+  role: UserRole
 
   constructor(username: string) {
     super();
 
     this.username = username;
-    this.role = 'user';
+    this.role = UserRole.user;
   }
 
   public async create(password: string) {

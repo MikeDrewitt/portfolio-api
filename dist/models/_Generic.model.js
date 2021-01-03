@@ -37,4 +37,4 @@ var Generic = /** @class */ (function () {
     return Generic;
 }());
 exports.Generic = Generic;
-//# sourceMappingURL=_Generic.model.js.map
+//# sourceMappingURL=_generic.model.js.map

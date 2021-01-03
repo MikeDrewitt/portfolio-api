@@ -1,7 +1,7 @@
 // Libraries
 import { Entity, Column, FindManyOptions, getManager, } from 'typeorm';
 
-import { Generic } from './_Generic.model';
+import { Generic } from '@models/_generic.model';
 
 @Entity()
 export class Adventure extends Generic {

@@ -2,10 +2,10 @@
 import express from "express";
 
 // Validator
-import { create as validation } from "../validators/adventures.validator";
+import { create as validation } from "@middleware/validators/adventures.validator";
 
 // Controller
-import { get, post } from "../controllers/adventures.controller";
+import { get, post } from "@controllers/adventures.controller";
 
 const Router = express.Router();
 

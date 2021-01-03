@@ -5,14 +5,21 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 
+// Allows alias paths
+// New paths need to be added to package.json, tsconfig.json, and jest.config.js
+// tsconfig.json - allows linting + general typescript to work
+// package.json - allows compiled js to work
+// jest.config.js - allows testing imports to work
+import 'module-alias/register';
+
 // ORM Libraries
 import reflexMetadata from "reflect-metadata";
 import { createConnection } from "typeorm";
 
 // Middleware
-import routes from "./routers/routes";
+import routes from "./routers/router";
 import errorHandler from "./middleware/errorHandler.middleware";
-import './middleware/passport.middleware'; // Initializes passport middleware
+import './middleware/auth.middleware'; // Initializes passport middleware
 
 import environment from "./environment";
 

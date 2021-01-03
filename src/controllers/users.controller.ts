@@ -2,11 +2,15 @@ import { validationResult } from "express-validator";
 import passport from "passport";
 import jwt from 'jsonwebtoken';
 
-import User from "../models/User.model";
+// Models
+import User from "@models/user.model";
 
-import environment from "../environment";
+// Constants
+import environment from "@~/environment";
+import TokenEncodeInfo from '@constants/TokenEncodeInfo.constant';
+import UserRole from '@constants/types/userRole.type';
 
-import { NotFound } from "../errors/api.errors";
+import { NotFound, Unauthorized } from "@constants/errors/api.errors";
 
 export async function get(req: any, res: any, next: any) {
   try {
@@ -36,8 +40,7 @@ export async function post(req: any, res: any, next: any) {
   try {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
     const { username, password } = req.body;
     const user = new User(username);
@@ -73,10 +76,14 @@ export async function patch(req: any, res: any, next: any) {
 
 export async function _delete(req: any, res: any, next: any) {
   try {
-    const { id } = req.params;
+    const { auth }: { auth: TokenEncodeInfo } = req;
+    const { id }: { id: number } = req.params;
+
+    if (auth.id !== id || auth.role !== UserRole.system) return res.status(401).json(Unauthorized)
+
     const dbResponse = await User.delete(id);
 
-    if (!dbResponse.affected) return res.status(404).json({ error: NotFound });
+    if (!dbResponse.affected) return res.status(404).json(NotFound);
 
     res.status(204).send();
   } catch (err) {
@@ -92,9 +99,8 @@ export async function login(req: any, res: any, next: any) {
       req.login(user, { session: false }, async (error: any) => {
           if (error) return next(error);
 
-          // Here's what we're encoding onto the token
-          const body = { id: user.id, username: user.username, role: user.role };
-          const token = jwt.sign({ user: body }, environment.jwtSecreteKey);
+          const auth = new TokenEncodeInfo(user);
+          const token = jwt.sign({ auth }, environment.jwtSecreteKey);
 
           return res.status(200).json({ token });
         }

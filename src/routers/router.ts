@@ -1,10 +1,10 @@
 import express from "express";
 
-import adventures from "./adventures.route";
-import status from "./status.route";
-import users from "./users.route";
+import adventures from "@routers/adventures.router";
+import status from "@routers/status.router";
+import users from "@routers/users.router";
 
-import { NotFound } from '../errors/api.errors';
+import { NotFound } from '@constants/errors/api.errors';
 
 const Router = express.Router();
 

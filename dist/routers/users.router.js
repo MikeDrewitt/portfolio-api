@@ -6,18 +6,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Libraries
 var express_1 = __importDefault(require("express"));
 // Middleware
-var users_validator_1 = require("../validators/users.validator");
-var passport_middleware_1 = require("../middleware/passport.middleware");
+var users_validator_1 = require("@middleware/validators/users.validator");
+var auth_middleware_1 = require("@middleware/auth.middleware");
 // Controller
-var users_controller_1 = require("../controllers/users.controller");
+var users_controller_1 = require("@controllers/users.controller");
 // Serialization
-var user_serializer_1 = require("../serializers/user.serializer");
+var user_serializer_1 = require("@middleware/serializers/user.serializer");
 var Router = express_1.default.Router();
 Router.get("/", users_controller_1.get, user_serializer_1.generic);
 Router.get("/:id", users_controller_1.detail, user_serializer_1.generic);
 Router.post("/", users_validator_1.create, users_controller_1.post, user_serializer_1.generic);
 Router.patch("/:id", users_validator_1.update, users_controller_1.patch);
-Router.delete("/:id", passport_middleware_1.userAuth, users_controller_1._delete);
+Router.delete("/:id", auth_middleware_1.userAuth, users_controller_1._delete);
 Router.post("/login", users_validator_1.create, users_controller_1.login);
 exports.default = Router;
-//# sourceMappingURL=users.route.js.map
+//# sourceMappingURL=users.router.js.map

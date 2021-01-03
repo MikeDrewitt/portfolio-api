@@ -43,9 +43,13 @@ exports.login = exports._delete = exports.patch = exports.post = exports.detail 
 var express_validator_1 = require("express-validator");
 var passport_1 = __importDefault(require("passport"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var User_model_1 = __importDefault(require("../models/User.model"));
-var environment_1 = __importDefault(require("../environment"));
-var api_errors_1 = require("../errors/api.errors");
+// Models
+var user_model_1 = __importDefault(require("@models/user.model"));
+// Constants
+var environment_1 = __importDefault(require("@~/environment"));
+var TokenEncodeInfo_constant_1 = __importDefault(require("@constants/TokenEncodeInfo.constant"));
+var userRole_type_1 = __importDefault(require("@constants/types/userRole.type"));
+var api_errors_1 = require("@constants/errors/api.errors");
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var _a, err_1;
@@ -54,7 +58,7 @@ function get(req, res, next) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req;
-                    return [4 /*yield*/, User_model_1.default.list()];
+                    return [4 /*yield*/, user_model_1.default.list()];
                 case 1:
                     _a.users = _b.sent();
                     next();
@@ -77,7 +81,7 @@ function detail(req, res, next) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     id = req.params.id;
-                    return [4 /*yield*/, User_model_1.default.retrieve(id)];
+                    return [4 /*yield*/, user_model_1.default.retrieve(id)];
                 case 1:
                     user = _a.sent();
                     if (!user)
@@ -106,7 +110,7 @@ function post(req, res, next) {
                     if (!errors.isEmpty())
                         return [2 /*return*/, res.status(400).json({ errors: errors.array() })];
                     _a = req.body, username = _a.username, password = _a.password;
-                    user = new User_model_1.default(username);
+                    user = new user_model_1.default(username);
                     return [4 /*yield*/, user.create(password)];
                 case 1:
                     dbUser = _b.sent();
@@ -134,7 +138,7 @@ function patch(req, res, next) {
                     errors = express_validator_1.validationResult(req);
                     if (!errors.isEmpty())
                         return [2 /*return*/, res.status(400).json({ errors: errors.array() })];
-                    return [4 /*yield*/, User_model_1.default.retrieve(id)];
+                    return [4 /*yield*/, user_model_1.default.retrieve(id)];
                 case 1:
                     user = _a.sent();
                     if (!user)
@@ -156,17 +160,20 @@ function patch(req, res, next) {
 exports.patch = patch;
 function _delete(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var id, dbResponse, err_5;
+        var auth, id, dbResponse, err_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
+                    auth = req.auth;
                     id = req.params.id;
-                    return [4 /*yield*/, User_model_1.default.delete(id)];
+                    if (auth.id !== id || auth.role !== userRole_type_1.default.system)
+                        return [2 /*return*/, res.status(401).json(api_errors_1.Unauthorized)];
+                    return [4 /*yield*/, user_model_1.default.delete(id)];
                 case 1:
                     dbResponse = _a.sent();
                     if (!dbResponse.affected)
-                        return [2 /*return*/, res.status(404).json({ error: api_errors_1.NotFound })];
+                        return [2 /*return*/, res.status(404).json(api_errors_1.NotFound)];
                     res.status(204).send();
                     return [3 /*break*/, 3];
                 case 2:
@@ -191,12 +198,12 @@ function login(req, res, next) {
                         if (!user)
                             return [2 /*return*/, next(new Error("Unknown username or incorrect password"))];
                         req.login(user, { session: false }, function (error) { return __awaiter(_this, void 0, void 0, function () {
-                            var body, token;
+                            var auth, token;
                             return __generator(this, function (_a) {
                                 if (error)
                                     return [2 /*return*/, next(error)];
-                                body = { id: user.id, username: user.username, role: user.role };
-                                token = jsonwebtoken_1.default.sign({ user: body }, environment_1.default.jwtSecreteKey);
+                                auth = new TokenEncodeInfo_constant_1.default(user);
+                                token = jsonwebtoken_1.default.sign({ auth: auth }, environment_1.default.jwtSecreteKey);
                                 return [2 /*return*/, res.status(200).json({ token: token })];
                             });
                         }); });

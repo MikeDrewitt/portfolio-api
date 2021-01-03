@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 
-import { create, list } from "../models/Adventure.model";
+import { create, list } from "@models/adventure.model";
 
 export async function get(req: any, res: any, next: any) {
   try {

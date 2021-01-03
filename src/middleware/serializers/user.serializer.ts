@@ -1,4 +1,4 @@
-import User from '../models/User.model';
+import User from '@models/user.model';
 
 export function generic(req: any, res: any, next: any) {
 

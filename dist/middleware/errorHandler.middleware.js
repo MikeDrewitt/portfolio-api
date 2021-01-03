@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var api_errors_1 = require("../errors/api.errors");
+var api_errors_1 = require("@constants/errors/api.errors");
 /**
  * Middleware function that acts as a error handler for the routers/controllers/ other middleware.
+ * As a general rule of thumb for this API, we try to only send back errors of the same structure
  *
- * TODO - might want to add some kind of network handler.
+ * Also never send back an actual JS error. No one wants to see a stack trace
+ *
+ * TODO - might want to add some kind of network error logging.
  *
  * @param {*} err
  * @param {*} req

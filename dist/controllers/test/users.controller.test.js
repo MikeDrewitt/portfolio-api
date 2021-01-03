@@ -42,9 +42,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Test
 var users_controller_1 = require("../users.controller");
 // Mocked out user model
-var User_model_1 = __importDefault(require("../../models/User.model"));
+var user_model_1 = __importDefault(require("../../models/user.model"));
 jest.mock('../../models/User.model');
-var api_errors_1 = require("../../errors/api.errors");
+jest.mock('express-validator');
+var api_errors_1 = require("../../constants/errors/api.errors");
 describe('user controller', function () {
     var req;
     var res;
@@ -61,7 +62,7 @@ describe('user controller', function () {
                 switch (_a.label) {
                     case 0:
                         expectedRes = [];
-                        User_model_1.default.list = jest.fn().mockReturnValue(expectedRes);
+                        user_model_1.default.list = jest.fn().mockReturnValue(expectedRes);
                         return [4 /*yield*/, users_controller_1.get(req, res, next)];
                     case 1:
                         _a.sent();
@@ -75,7 +76,7 @@ describe('user controller', function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        User_model_1.default.list = jest.fn().mockImplementation(function () { throw new Error('Some error'); });
+                        user_model_1.default.list = jest.fn().mockImplementation(function () { throw new Error('Some error'); });
                         return [4 /*yield*/, users_controller_1.get(req, res, next)];
                     case 1:
                         _a.sent();
@@ -96,9 +97,9 @@ describe('user controller', function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        expectedRes = new User_model_1.default('some_username');
+                        expectedRes = new user_model_1.default('some_username');
                         expectedRes.id = 1;
-                        User_model_1.default.retrieve = jest.fn().mockReturnValue(expectedRes);
+                        user_model_1.default.retrieve = jest.fn().mockReturnValue(expectedRes);
                         return [4 /*yield*/, users_controller_1.detail(req, res, next)];
                     case 1:
                         _a.sent();
@@ -112,7 +113,7 @@ describe('user controller', function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        User_model_1.default.retrieve = jest.fn().mockReturnValue(null);
+                        user_model_1.default.retrieve = jest.fn().mockReturnValue(null);
                         return [4 /*yield*/, users_controller_1.detail(req, res, next)];
                     case 1:
                         _a.sent();
@@ -127,7 +128,7 @@ describe('user controller', function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        User_model_1.default.retrieve = jest.fn().mockImplementation(function () { throw new Error('some error'); });
+                        user_model_1.default.retrieve = jest.fn().mockImplementation(function () { throw new Error('some error'); });
                         return [4 /*yield*/, users_controller_1.detail(req, res, next)];
                     case 1:
                         _a.sent();
@@ -139,8 +140,11 @@ describe('user controller', function () {
             });
         }); });
     });
-    // describe('POST', () => {
-    // });
+    describe('POST', function () {
+        beforeEach(function () {
+            req = { body: { username: 'example', password: 'password1' } };
+        });
+    });
     // describe('PATCH', () => {
     // });
     // describe('DELETE', () => {

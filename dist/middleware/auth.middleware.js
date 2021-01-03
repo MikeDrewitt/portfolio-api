@@ -43,8 +43,9 @@ exports.systemAuth = exports.userAuth = void 0;
 var passport_1 = __importDefault(require("passport"));
 var passport_local_1 = require("passport-local");
 var passport_jwt_1 = require("passport-jwt");
-var User_model_1 = __importDefault(require("../models/User.model"));
-var environment_1 = __importDefault(require("../environment"));
+var user_model_1 = __importDefault(require("@models/user.model"));
+var environment_1 = __importDefault(require("@~/environment"));
+var userRole_type_1 = __importDefault(require("@constants/types/userRole.type"));
 var secretOrKey = environment_1.default.jwtSecreteKey;
 var jwtFromRequest = passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken();
 function loginCallback(username, password, done) {
@@ -54,7 +55,7 @@ function loginCallback(username, password, done) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, User_model_1.default.authenticate(username, password)];
+                    return [4 /*yield*/, user_model_1.default.authenticate(username, password)];
                 case 1:
                     user = _a.sent();
                     if (!user)
@@ -85,7 +86,7 @@ function checkSystem(token, done) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             try {
-                if (token.user.role !== 'system')
+                if (token.user.role !== userRole_type_1.default.system)
                     throw new Error('Non-system users are unauthorized');
                 return [2 /*return*/, done(null, token.user)];
             }
@@ -105,4 +106,4 @@ passport_1.default.use('system', system);
 passport_1.default.use(jwt);
 exports.userAuth = passport_1.default.authenticate('jwt', { session: false });
 exports.systemAuth = passport_1.default.authenticate('system', { session: false });
-//# sourceMappingURL=passport.middleware.js.map
+//# sourceMappingURL=auth.middleware.js.map

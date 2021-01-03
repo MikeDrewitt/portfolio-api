@@ -9,11 +9,14 @@ var body_parser_1 = __importDefault(require("body-parser"));
 var cors_1 = __importDefault(require("cors"));
 var helmet_1 = __importDefault(require("helmet"));
 var morgan_1 = __importDefault(require("morgan"));
+// Allows alias paths
+// New paths need to be added to packaage.json and tsconfig.json
+require("module-alias/register");
 var typeorm_1 = require("typeorm");
 // Middleware
-var routes_1 = __importDefault(require("./routers/routes"));
+var router_1 = __importDefault(require("./routers/router"));
 var errorHandler_middleware_1 = __importDefault(require("./middleware/errorHandler.middleware"));
-require("./middleware/passport.middleware"); // Initializes passport middleware
+require("./middleware/auth.middleware"); // Initializes passport middleware
 var environment_1 = __importDefault(require("./environment"));
 var app = express_1.default();
 typeorm_1.createConnection()
@@ -24,7 +27,7 @@ typeorm_1.createConnection()
     app.use(cors_1.default());
     app.use(morgan_1.default("combined"));
     // Middleware
-    app.use("/", routes_1.default);
+    app.use("/", router_1.default);
     app.use(errorHandler_middleware_1.default);
     app.listen(environment_1.default.port, function () { return console.log("API listenting at port - " + environment_1.default.port); });
 })

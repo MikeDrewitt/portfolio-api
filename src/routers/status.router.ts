@@ -2,10 +2,10 @@
 import express from "express";
 
 // Controller
-import { get } from "../controllers/status.controller";
+import { get } from "@controllers/status.controller";
 
 // Middleware
-import { userAuth, systemAuth } from "../middleware/passport.middleware";
+import { userAuth, systemAuth } from "@middleware/auth.middleware";
 
 const Router = express.Router();
 

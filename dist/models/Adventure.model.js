@@ -61,7 +61,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.list = exports.deleteRecord = exports.retrieve = exports.update = exports.create = exports.Adventure = void 0;
 // Libraries
 var typeorm_1 = require("typeorm");
-var _Generic_model_1 = require("./_Generic.model");
+var _generic_model_1 = require("@models/_generic.model");
 var Adventure = /** @class */ (function (_super) {
     __extends(Adventure, _super);
     function Adventure() {
@@ -87,7 +87,7 @@ var Adventure = /** @class */ (function (_super) {
         typeorm_1.Entity()
     ], Adventure);
     return Adventure;
-}(_Generic_model_1.Generic));
+}(_generic_model_1.Generic));
 exports.Adventure = Adventure;
 function create(adventure) {
     return __awaiter(this, void 0, void 0, function () {
@@ -134,4 +134,4 @@ function list(options) {
     });
 }
 exports.list = list;
-//# sourceMappingURL=Adventure.model.js.map
+//# sourceMappingURL=adventure.model.js.map

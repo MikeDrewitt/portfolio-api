@@ -75,13 +75,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Libraries
 var bcrypt_1 = __importDefault(require("bcrypt"));
 var typeorm_1 = require("typeorm");
-var _Generic_model_1 = require("./_Generic.model");
+var _generic_model_1 = require("@models/_generic.model");
+var userRole_type_1 = __importDefault(require("@constants/types/userRole.type"));
 var User = /** @class */ (function (_super) {
     __extends(User, _super);
     function User(username) {
         var _this = _super.call(this) || this;
         _this.username = username;
-        _this.role = 'user';
+        _this.role = userRole_type_1.default.user;
         return _this;
     }
     User_1 = User;
@@ -169,7 +170,7 @@ var User = /** @class */ (function (_super) {
         __metadata("design:type", String)
     ], User.prototype, "hash", void 0);
     __decorate([
-        typeorm_1.Column({ length: 10, default: 'user' }),
+        typeorm_1.Column({ default: userRole_type_1.default.user }),
         __metadata("design:type", String)
     ], User.prototype, "role", void 0);
     User = User_1 = __decorate([
@@ -178,6 +179,6 @@ var User = /** @class */ (function (_super) {
         __metadata("design:paramtypes", [String])
     ], User);
     return User;
-}(_Generic_model_1.Generic));
+}(_generic_model_1.Generic));
 exports.default = User;
-//# sourceMappingURL=User.model.js.map
+//# sourceMappingURL=user.model.js.map
