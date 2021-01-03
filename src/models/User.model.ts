@@ -30,7 +30,7 @@ export default class User extends Generic {
   }
 
   public async update(updates: object) {
-    return getManager().update(User, this.id, updates);
+    return await getManager().update(User, this.id, updates);
   }
 
   public static async delete(id: number) {

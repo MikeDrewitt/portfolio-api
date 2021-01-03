@@ -36,14 +36,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.get = void 0;
-function get(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            res.status(200).send();
-            return [2 /*return*/];
-        });
+var status_controller_1 = require("../status.controller");
+describe('status controller', function () {
+    var req;
+    var res;
+    var next;
+    beforeEach(function () {
+        req = {};
+        res = { status: jest.fn().mockReturnThis(), send: jest.fn(), json: jest.fn() };
+        next = jest.fn();
     });
-}
-exports.get = get;
-//# sourceMappingURL=status.controller.js.map
+    it('200 - heartbeat', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, status_controller_1.get(req, res, next)];
+                case 1:
+                    _a.sent();
+                    expect(res.status).toBeCalledWith(200);
+                    expect(res.send).toBeCalledWith();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});
+//# sourceMappingURL=status.controller.test.js.map

@@ -104,7 +104,10 @@ var User = /** @class */ (function (_super) {
     User.prototype.update = function (updates) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, typeorm_1.getManager().update(User_1, this.id, updates)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, typeorm_1.getManager().update(User_1, this.id, updates)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };

@@ -27,8 +27,8 @@ describe('user controller', () => {
 
       await get(req, res, next);
 
-      expect(res.status).toBeCalledWith(200);
-      expect(res.send).toBeCalledWith(expectedRes);
+      expect(req.users).toEqual(expectedRes);
+      expect(next).toHaveBeenCalled();
     });
 
     it('400 - passes to next middleware', async () => {
@@ -55,8 +55,8 @@ describe('user controller', () => {
 
       await detail(req, res, next);
 
-      expect(res.status).toBeCalledWith(200);
-      expect(res.send).toBeCalledWith(expectedRes);
+      expect(req.user).toEqual(expectedRes);
+      expect(next).toHaveBeenCalled();
     });
 
     it('404 - unknown id', async () => {

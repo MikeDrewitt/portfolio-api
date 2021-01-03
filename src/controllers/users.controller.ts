@@ -10,9 +10,9 @@ import { NotFound } from "../errors/api.errors";
 
 export async function get(req: any, res: any, next: any) {
   try {
-    const users = await User.list();
+    req.users = await User.list();
 
-    res.status(200).send(users);
+    next();
   } catch (err) {
     next(err);
   }
@@ -25,7 +25,8 @@ export async function detail(req: any, res: any, next: any) {
 
     if (!user) return res.status(404).json(NotFound);
 
-    res.status(200).send(user);
+    req.user = user;
+    next();
   } catch (err) {
     next(err);
   }
@@ -44,7 +45,7 @@ export async function post(req: any, res: any, next: any) {
 
     res.status(201).send(dbUser);
   } catch (err) {
-    res.status(400).json({ message: err.detail });
+    res.status(400).json({ error: err.detail });
   }
 }
 
@@ -99,7 +100,7 @@ export async function login(req: any, res: any, next: any) {
         }
       );
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 

@@ -48,18 +48,19 @@ var environment_1 = __importDefault(require("../environment"));
 var api_errors_1 = require("../errors/api.errors");
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var users, err_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a, err_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _b.trys.push([0, 2, , 3]);
+                    _a = req;
                     return [4 /*yield*/, User_model_1.default.list()];
                 case 1:
-                    users = _a.sent();
-                    res.status(200).send(users);
+                    _a.users = _b.sent();
+                    next();
                     return [3 /*break*/, 3];
                 case 2:
-                    err_1 = _a.sent();
+                    err_1 = _b.sent();
                     next(err_1);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
@@ -81,7 +82,8 @@ function detail(req, res, next) {
                     user = _a.sent();
                     if (!user)
                         return [2 /*return*/, res.status(404).json(api_errors_1.NotFound)];
-                    res.status(200).send(user);
+                    req.user = user;
+                    next();
                     return [3 /*break*/, 3];
                 case 2:
                     err_2 = _a.sent();
@@ -112,7 +114,7 @@ function post(req, res, next) {
                     return [3 /*break*/, 3];
                 case 2:
                     err_3 = _b.sent();
-                    res.status(400).json({ message: err_3.detail });
+                    res.status(400).json({ error: err_3.detail });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -200,7 +202,7 @@ function login(req, res, next) {
                         }); });
                     }
                     catch (error) {
-                        return [2 /*return*/, next(error)];
+                        next(error);
                     }
                     return [2 /*return*/];
                 });

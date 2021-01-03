@@ -65,8 +65,8 @@ describe('user controller', function () {
                         return [4 /*yield*/, users_controller_1.get(req, res, next)];
                     case 1:
                         _a.sent();
-                        expect(res.status).toBeCalledWith(200);
-                        expect(res.send).toBeCalledWith(expectedRes);
+                        expect(req.users).toEqual(expectedRes);
+                        expect(next).toHaveBeenCalled();
                         return [2 /*return*/];
                 }
             });
@@ -102,8 +102,8 @@ describe('user controller', function () {
                         return [4 /*yield*/, users_controller_1.detail(req, res, next)];
                     case 1:
                         _a.sent();
-                        expect(res.status).toBeCalledWith(200);
-                        expect(res.send).toBeCalledWith(expectedRes);
+                        expect(req.user).toEqual(expectedRes);
+                        expect(next).toHaveBeenCalled();
                         return [2 /*return*/];
                 }
             });

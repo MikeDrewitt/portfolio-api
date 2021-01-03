@@ -1,5 +1,5 @@
 
-class ApiError {
+export class ApiError {
   error: string;
 
   constructor(error: string) {
