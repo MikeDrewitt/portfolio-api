@@ -80,7 +80,7 @@ function detail(req, res, next) {
                 case 1:
                     user = _a.sent();
                     if (!user)
-                        return [2 /*return*/, res.status(404).json({ error: api_errors_1.NotFound })];
+                        return [2 /*return*/, res.status(404).json(api_errors_1.NotFound)];
                     res.status(200).send(user);
                     return [3 /*break*/, 3];
                 case 2:

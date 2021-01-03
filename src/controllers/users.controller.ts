@@ -23,7 +23,7 @@ export async function detail(req: any, res: any, next: any) {
     const { id } = req.params;
     const user = await User.retrieve(id);
 
-    if (!user) return res.status(404).json({ error: NotFound });
+    if (!user) return res.status(404).json(NotFound);
 
     res.status(200).send(user);
   } catch (err) {
