@@ -38,11 +38,7 @@ export async function detail(req: any, res: any, next: any) {
 
 export async function post(req: any, res: any, next: any) {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
-    const { username, password } = req.body;
+     const { username, password } = req.body;
     const user = new User(username);
     const dbUser = await user.create(password);
 

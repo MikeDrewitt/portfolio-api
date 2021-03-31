@@ -1,5 +1,5 @@
 // Test
-import { get, detail } from '../users.controller';
+import { get, detail, post } from '../users.controller';
 
 // Mocked out user model
 import User from '../../models/user.model';
@@ -87,6 +87,16 @@ describe('user controller', () => {
       req = { body: { username: 'example', password: 'password1' } };
     });
 
+    it('201 - user created and returned', async () => {
+      const expectedRes = new User('some_username');
+
+      User.prototype.create = jest.fn().mockReturnValue(expectedRes);
+
+      await post(req, res, next);
+
+      expect(res.status).toBeCalledWith(201);
+      expect(res.send).toBeCalledWith(expectedRes);
+    });
 
   });
 

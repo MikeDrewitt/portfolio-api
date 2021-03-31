@@ -10,7 +10,10 @@ var cors_1 = __importDefault(require("cors"));
 var helmet_1 = __importDefault(require("helmet"));
 var morgan_1 = __importDefault(require("morgan"));
 // Allows alias paths
-// New paths need to be added to packaage.json and tsconfig.json
+// New paths need to be added to package.json, tsconfig.json, and jest.config.js
+// tsconfig.json - allows linting + general typescript to work
+// package.json - allows compiled js to work
+// jest.config.js - allows testing imports to work
 require("module-alias/register");
 var typeorm_1 = require("typeorm");
 // Middleware

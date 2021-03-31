@@ -101,14 +101,11 @@ function detail(req, res, next) {
 exports.detail = detail;
 function post(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var errors, _a, username, password, user, dbUser, err_3;
+        var _a, username, password, user, dbUser, err_3;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
-                    errors = express_validator_1.validationResult(req);
-                    if (!errors.isEmpty())
-                        return [2 /*return*/, res.status(400).json({ errors: errors.array() })];
                     _a = req.body, username = _a.username, password = _a.password;
                     user = new user_model_1.default(username);
                     return [4 /*yield*/, user.create(password)];

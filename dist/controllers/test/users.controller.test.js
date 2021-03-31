@@ -144,6 +144,22 @@ describe('user controller', function () {
         beforeEach(function () {
             req = { body: { username: 'example', password: 'password1' } };
         });
+        it('201 - user created and returned', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var expectedRes;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        expectedRes = new user_model_1.default('some_username');
+                        user_model_1.default.prototype.create = jest.fn().mockReturnValue(expectedRes);
+                        return [4 /*yield*/, users_controller_1.post(req, res, next)];
+                    case 1:
+                        _a.sent();
+                        expect(res.status).toBeCalledWith(201);
+                        expect(res.send).toBeCalledWith(expectedRes);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
     });
     // describe('PATCH', () => {
     // });
